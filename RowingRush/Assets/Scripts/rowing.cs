@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class rowing : MonoBehaviour
+public class Rowing : MonoBehaviour
 {
 
     public void SceneChange()
@@ -14,9 +14,8 @@ public class rowing : MonoBehaviour
     }
 
 
-    public void Onclick(string TargetDistance){
-        string isTargetDistance = TargetDistance;
-        Debug.Log(isTargetDistance);
+    public void Onclick(int TargetDistance){
+        PlayerPrefs.SetInt("TargetDistance", TargetDistance);
     }
 
     

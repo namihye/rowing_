@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using TMPro;
 
 public class Distance : MonoBehaviour
@@ -10,14 +12,25 @@ public class Distance : MonoBehaviour
     public GameObject Ranking;
     public GameObject StartUI;
     public GameObject _Timer;
+    
 
     public TextMeshProUGUI countText;
     public TextMeshProUGUI curTimeText;
     public TextMeshProUGUI curDistanceText;
+    public TextMeshProUGUI curSpeedText;
+    public TextMeshProUGUI RecordText;
+    
 
     float curTime;
     float BoatDistance;
+    float speed;
+    float avgSpeed;
+    int TargetDistance;
+    
     Vector3 FirstDistance = new Vector3(0,0,0);
+    Vector3 currentPosition;
+    Vector3 oldPosition;
+
     bool isFinishMenu = true;
 
     IEnumerator StartCount(){
@@ -66,8 +79,33 @@ public class Distance : MonoBehaviour
         yield return null;
     }
 
+    IEnumerator CalVelocity(){
+        currentPosition = transform.position;
+        float distance = Vector3.Distance(oldPosition,currentPosition);
+        speed = distance / Time.deltaTime;
+        curSpeedText.text = speed.ToString("F0")+"m/s";
+        oldPosition = currentPosition;
+        yield return null;
+    }
+
+    IEnumerator curScore(){
+        isFinishMenu = false;
+        avgSpeed = BoatDistance / curTime;
+        RecordText.text = string.Format("time {0}    dist {1}km    speed {2}m/s",
+            curTimeText.text, (TargetDistance/1000).ToString(), avgSpeed.ToString("F0"));
+        yield return new WaitForSecondsRealtime(3);
+        FinishMenu.SetActive(false);
+        Ranking.SetActive(true);
+        
+    }
+
+
     public void Start(){
+        TargetDistance = PlayerPrefs.GetInt("TargetDistance");
+        // Rowing rowing = GameObject.Find("TargetDistance").GetComponent<Rowing>();
+        // _TargetDistance = int.Parse(rowing. isTargetDistance);
         StartCoroutine("StartCount");
+        oldPosition = transform.position;
     }
     
 
@@ -75,26 +113,23 @@ public class Distance : MonoBehaviour
         BoatDistance = Vector3.Distance(FirstDistance, _Boat.transform.position);
         //Debug.Log(BoatDistance);
         StartCoroutine("CalDistance");
+        StartCoroutine("CalVelocity");
         
     }
 
     void LateUpdate(){
-        if (BoatDistance>100 && isFinishMenu==true){
+        
+        if (BoatDistance > TargetDistance/10 && isFinishMenu == true){
             _Boat.GetComponent<BoatController>().enabled = false;
             StopCoroutine("Timer");
             StopCoroutine("CalDistance");
+            StopCoroutine("CalVelocity");
             FinishMenu.SetActive(true);
-            Invoke("Delay",3f);
+            StartCoroutine("curScore");
             
             
         }
         
-    }
-
-    private void Delay(){
-        isFinishMenu = false;
-        FinishMenu.SetActive(false);        
-        Ranking.SetActive(true);
     }
 
 }
