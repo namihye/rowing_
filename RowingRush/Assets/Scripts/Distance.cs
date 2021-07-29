@@ -19,6 +19,7 @@ public class Distance : MonoBehaviour
     public TextMeshProUGUI curDistanceText;
     public TextMeshProUGUI curSpeedText;
     public TextMeshProUGUI RecordText;
+    public TextMeshProUGUI BestRecord;
     
 
     float curTime;
@@ -93,15 +94,43 @@ public class Distance : MonoBehaviour
         avgSpeed = BoatDistance / curTime;
         RecordText.text = string.Format("time {0}    dist {1}km    speed {2}m/s",
             curTimeText.text, (TargetDistance/1000).ToString(), avgSpeed.ToString("F0"));
+
+        if(TargetDistance==1000){
+            if(avgSpeed>PlayerPrefs.GetFloat("BestSpeed",0)){
+                PlayerPrefs.SetFloat("BestSpeed",avgSpeed);
+                PlayerPrefs.SetString("BestRecord",RecordText.text);
+            }
+        }
+
+        BestRecord.text = PlayerPrefs.GetString("BestRecord");
+        // Ranking_second.text = PlayerPrefs.GetString("Rankig_second");
+        // Ranking_third.text = PlayerPrefs.GetString("Rankig_third");
+
         yield return new WaitForSecondsRealtime(3);
         FinishMenu.SetActive(false);
         Ranking.SetActive(true);
         
     }
 
+    // float GetBestSpeed(){
+    //     float BestSpeed = PlayerPrefs.GetFloat("BestSpeed",0);
+    //     return BestSpeed;
+    // }
+
+    // float GetSpeed_second(){
+    //     float Speed_second = PlayerPrefs.GetFloat("Speed_second",0);
+    //     return Speed_second;
+    // }
+
+    // float GetSpeed_third(){
+    //     float Speed_third = PlayerPrefs.GetFloat("Speed_third",0);
+    //     return Speed_third;
+    // }
+
 
     public void Start(){
         TargetDistance = PlayerPrefs.GetInt("TargetDistance");
+        
         // Rowing rowing = GameObject.Find("TargetDistance").GetComponent<Rowing>();
         // _TargetDistance = int.Parse(rowing. isTargetDistance);
         StartCoroutine("StartCount");

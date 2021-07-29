@@ -6,7 +6,7 @@ public class BoatControls : MonoBehaviour
 {
     Vector3 eulerAngleVelocity;
     private Rigidbody RB;
-    public float Speed = 15;
+    public float Speed = 20;
     GameObject saftyRing;
 
     // Start is called before the first frame update
