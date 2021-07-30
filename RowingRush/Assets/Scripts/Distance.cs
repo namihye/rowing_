@@ -19,9 +19,12 @@ public class Distance : MonoBehaviour
     public TextMeshProUGUI curDistanceText;
     public TextMeshProUGUI curSpeedText;
     public TextMeshProUGUI RecordText;
-    public TextMeshProUGUI BestRecord;
-    
+    public TextMeshProUGUI MainText;
 
+    public TextMeshProUGUI BestRecord;
+    public TextMeshProUGUI SecondRecord;
+    public TextMeshProUGUI ThirdRecord;
+    
     float curTime;
     float BoatDistance;
     float speed;
@@ -91,20 +94,112 @@ public class Distance : MonoBehaviour
 
     IEnumerator curScore(){
         isFinishMenu = false;
+        MainText.text = (TargetDistance/1000).ToString()+"km RANKING TOP3";
         avgSpeed = BoatDistance / curTime;
-        RecordText.text = string.Format("time {0}    dist {1}km    speed {2}m/s",
-            curTimeText.text, (TargetDistance/1000).ToString(), avgSpeed.ToString("F0"));
+        RecordText.text = string.Format("time {0}    speed {1}m/s",
+            curTimeText.text, avgSpeed.ToString("F0"));
 
         if(TargetDistance==1000){
-            if(avgSpeed>PlayerPrefs.GetFloat("BestSpeed",0)){
-                PlayerPrefs.SetFloat("BestSpeed",avgSpeed);
-                PlayerPrefs.SetString("BestRecord",RecordText.text);
+            //현재 기록이 새로운 1등 기록일 때
+            if(avgSpeed>PlayerPrefs.GetFloat("BestSpeed_1km",0)){
+                //현재 기록을 1등 기록으로 놓고 기존 1,2등 기록을 2,3등 기록으로 업데이트
+                PlayerPrefs.SetFloat("ThirdSpeed_1km",PlayerPrefs.GetFloat("SecondSpeed_1km"));
+                PlayerPrefs.SetFloat("SecondSpeed_1km",PlayerPrefs.GetFloat("BestSpeed_1km"));
+                PlayerPrefs.SetFloat("BestSpeed_1km",avgSpeed);
+                
+                PlayerPrefs.SetString("ThirdRecord_1km",PlayerPrefs.GetString("SecondRecord_1km"));
+                PlayerPrefs.SetString("SecondRecord_1km",PlayerPrefs.GetString("BestRecord_1km"));
+                PlayerPrefs.SetString("BestRecord_1km",RecordText.text);
             }
+            //현재 기록이 새로운 2등 기록일 때
+            else if(avgSpeed>PlayerPrefs.GetFloat("SecondSpeed_1km",0)){
+                //현재 기록을 2등 기록으로 놓고 기존 2등 기록을 3등 기록으로 업데이트
+                PlayerPrefs.SetFloat("ThirdSpeed_1km",PlayerPrefs.GetFloat("SecondSpeed_1km"));
+                PlayerPrefs.SetFloat("SecondSpeed_1km",avgSpeed);
+
+                PlayerPrefs.SetString("ThidRecord_1km",PlayerPrefs.GetString("SecondRecord_1km"));
+                PlayerPrefs.SetString("SecondRecord_1km",RecordText.text);
+            }
+            //현재 기록이 새로운 3등 기록일 때
+            else if(avgSpeed>PlayerPrefs.GetFloat("ThirdSpeed_1km",0)){
+                //현재 기록을 3등 기록으로 업데이트
+                PlayerPrefs.SetFloat("ThirdSpeed_1km",avgSpeed);
+
+                PlayerPrefs.SetString("ThirdRecord_1km",RecordText.text);
+            }
+
+            BestRecord.text = PlayerPrefs.GetString("BestRecord_1km");
+            SecondRecord.text = PlayerPrefs.GetString("SecondRecord_1km");
+            ThirdRecord.text = PlayerPrefs.GetString("ThirdRecord_1km");
         }
 
-        BestRecord.text = PlayerPrefs.GetString("BestRecord");
-        // Ranking_second.text = PlayerPrefs.GetString("Rankig_second");
-        // Ranking_third.text = PlayerPrefs.GetString("Rankig_third");
+        if(TargetDistance==3000){
+            //현재 기록이 새로운 1등 기록일 때
+            if(avgSpeed>PlayerPrefs.GetFloat("BestSpeed_3km",0)){
+                //현재 기록을 1등 기록으로 놓고 기존 1,2등 기록을 2,3등 기록으로 업데이트
+                PlayerPrefs.SetFloat("ThirdSpeed_3km",PlayerPrefs.GetFloat("SecondSpeed_3km"));
+                PlayerPrefs.SetFloat("SecondSpeed_3km",PlayerPrefs.GetFloat("BestSpeed_3km"));
+                PlayerPrefs.SetFloat("BestSpeed_3km",avgSpeed);
+                
+                PlayerPrefs.SetString("ThirdRecord_3km",PlayerPrefs.GetString("SecondRecord_3km"));
+                PlayerPrefs.SetString("SecondRecord_3km",PlayerPrefs.GetString("BestRecord_3km"));
+                PlayerPrefs.SetString("BestRecord_3km",RecordText.text);
+            }
+            //현재 기록이 새로운 2등 기록일 때
+            else if(avgSpeed>PlayerPrefs.GetFloat("SecondSpeed_3km",0)){
+                //현재 기록을 2등 기록으로 놓고 기존 2등 기록을 3등 기록으로 업데이트
+                PlayerPrefs.SetFloat("ThirdSpeed_3km",PlayerPrefs.GetFloat("SecondSpeed_3km"));
+                PlayerPrefs.SetFloat("SecondSpeed_3km",avgSpeed);
+
+                PlayerPrefs.SetString("ThidRecord_3km",PlayerPrefs.GetString("SecondRecord_3km"));
+                PlayerPrefs.SetString("SecondRecord_3km",RecordText.text);
+            }
+            //현재 기록이 새로운 3등 기록일 때
+            else if(avgSpeed>PlayerPrefs.GetFloat("ThirdSpeed_3km",0)){
+                //현재 기록을 3등 기록으로 업데이트
+                PlayerPrefs.SetFloat("ThirdSpeed_3km",avgSpeed);
+
+                PlayerPrefs.SetString("ThirdRecord_3km",RecordText.text);
+            }
+
+            BestRecord.text = PlayerPrefs.GetString("BestRecord_3km");
+            SecondRecord.text = PlayerPrefs.GetString("SecondRecord_3km");
+            ThirdRecord.text = PlayerPrefs.GetString("ThirdRecord_3km");
+        }
+
+        if(TargetDistance==5000){
+            //현재 기록이 새로운 1등 기록일 때
+            if(avgSpeed>PlayerPrefs.GetFloat("BestSpeed_5km",0)){
+                //현재 기록을 1등 기록으로 놓고 기존 1,2등 기록을 2,3등 기록으로 업데이트
+                PlayerPrefs.SetFloat("ThirdSpeed_5km",PlayerPrefs.GetFloat("SecondSpeed_5km"));
+                PlayerPrefs.SetFloat("SecondSpeed_5km",PlayerPrefs.GetFloat("BestSpeed_5km"));
+                PlayerPrefs.SetFloat("BestSpeed_5km",avgSpeed);
+                
+                PlayerPrefs.SetString("ThirdRecord_5km",PlayerPrefs.GetString("SecondRecord_5km"));
+                PlayerPrefs.SetString("SecondRecord_5km",PlayerPrefs.GetString("BestRecord_5km"));
+                PlayerPrefs.SetString("BestRecord_5km",RecordText.text);
+            }
+            //현재 기록이 새로운 2등 기록일 때
+            else if(avgSpeed>PlayerPrefs.GetFloat("SecondSpeed_5km",0)){
+                //현재 기록을 2등 기록으로 놓고 기존 2등 기록을 3등 기록으로 업데이트
+                PlayerPrefs.SetFloat("ThirdSpeed_5km",PlayerPrefs.GetFloat("SecondSpeed_5km"));
+                PlayerPrefs.SetFloat("SecondSpeed_5km",avgSpeed);
+
+                PlayerPrefs.SetString("ThidRecord_5km",PlayerPrefs.GetString("SecondRecord_5km"));
+                PlayerPrefs.SetString("SecondRecord_5km",RecordText.text);
+            }
+            //현재 기록이 새로운 3등 기록일 때
+            else if(avgSpeed>PlayerPrefs.GetFloat("ThirdSpeed_5km",0)){
+                //현재 기록을 3등 기록으로 업데이트
+                PlayerPrefs.SetFloat("ThirdSpeed_5km",avgSpeed);
+
+                PlayerPrefs.SetString("ThirdRecord_5km",RecordText.text);
+            }
+
+            BestRecord.text = PlayerPrefs.GetString("BestRecord_5km");
+            SecondRecord.text = PlayerPrefs.GetString("SecondRecord_5km");
+            ThirdRecord.text = PlayerPrefs.GetString("ThirdRecord_5km");
+        }
 
         yield return new WaitForSecondsRealtime(3);
         FinishMenu.SetActive(false);
@@ -112,35 +207,18 @@ public class Distance : MonoBehaviour
         
     }
 
-    // float GetBestSpeed(){
-    //     float BestSpeed = PlayerPrefs.GetFloat("BestSpeed",0);
-    //     return BestSpeed;
-    // }
-
-    // float GetSpeed_second(){
-    //     float Speed_second = PlayerPrefs.GetFloat("Speed_second",0);
-    //     return Speed_second;
-    // }
-
-    // float GetSpeed_third(){
-    //     float Speed_third = PlayerPrefs.GetFloat("Speed_third",0);
-    //     return Speed_third;
-    // }
-
 
     public void Start(){
         TargetDistance = PlayerPrefs.GetInt("TargetDistance");
         
-        // Rowing rowing = GameObject.Find("TargetDistance").GetComponent<Rowing>();
-        // _TargetDistance = int.Parse(rowing. isTargetDistance);
         StartCoroutine("StartCount");
         oldPosition = transform.position;
     }
-    
+
 
     public void FixedUpdate(){
         BoatDistance = Vector3.Distance(FirstDistance, _Boat.transform.position);
-        //Debug.Log(BoatDistance);
+
         StartCoroutine("CalDistance");
         StartCoroutine("CalVelocity");
         
