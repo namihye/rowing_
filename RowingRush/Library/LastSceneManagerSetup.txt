@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Scenes/E_start.unity
+- path: Assets/Scenes/Rowing.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0
